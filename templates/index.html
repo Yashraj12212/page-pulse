@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Pulse</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        input { width: 70%; padding: 10px; margin-right: 10px; }
+        button { padding: 10px 20px; cursor: pointer; }
+        #results { margin-top: 20px; padding: 15px; background: #f4f4f4; border-radius: 5px; display: none; }
+        .metric { margin-bottom: 10px; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>Page Pulse Auditor</h1>
+    <p>Enter a URL below to audit its basic SEO and performance metrics.</p>
+    
+    <input type="url" id="urlInput" placeholder="https://example.com" required>
+    <button onclick="runAudit()">Audit Page</button>
+
+    <div id="results"></div>
+
+    <script>
+        async function runAudit() {
+            const url = document.getElementById('urlInput').value;
+            const resultsDiv = document.getElementById('results');
+            
+            if (!url) {
+                alert("Please enter a URL.");
+                return;
+            }
+
+            // Show loading state
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = '<i>Auditing page, please wait...</i>';
+
+            try {
+                // Call YOUR python API!
+                const response = await fetch('/api/audit?url=' + encodeURIComponent(url));
+                const data = await response.json();
+
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                } else {
+                    // Display the results cleanly
+                    resultsDiv.innerHTML = `
+                        <div class="metric"><strong>Status Code:</strong> ${data.status_code}</div>
+                        <div class="metric"><strong>Response Time:</strong> ${data.response_time_seconds} seconds</div>
+                        <div class="metric"><strong>Title:</strong> ${data.title}</div>
+                        <div class="metric"><strong>H1 Count:</strong> ${data.h1_count}</div>
+                        <div class="metric"><strong>Images Missing Alt Text:</strong> ${data.missing_alt_images}</div>
+                        <div class="metric"><strong>Approx. Word Count:</strong> ${data.word_count}</div>
+                    `;
+                }
+            } catch (err) {
+                resultsDiv.innerHTML = `<div class="error">An unexpected error occurred.</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
