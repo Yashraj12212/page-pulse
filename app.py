@@ -15,9 +15,15 @@ def audit_endpoint():
     
     if not target_url:
         return jsonify({"error": "Please provide a URL to audit."}), 400
+
+    if not target_url.startswith(("http://", "https://")):
+        return jsonify({"error": "Invalid URL format. Please include http:// or https://"}), 400
     
     # Auditing function
     result = audit_page(target_url)
+
+    if result.get("error"):
+        return jsonify(result), 400
     
     return jsonify(result)
 

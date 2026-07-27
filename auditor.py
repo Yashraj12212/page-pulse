@@ -2,7 +2,7 @@ import requests
 import time
 from bs4 import BeautifulSoup
 
-def audit_page(url):
+def audit_page(url: str):
 
     report = {
         "url": url,
