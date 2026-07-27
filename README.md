@@ -1,4 +1,4 @@
-readme_content = """# Page Pulse
+Page Pulse
 
 Page Pulse is a lightweight, full-stack web application that audits any URL and returns basic SEO and performance metrics. It was built as a clean, simple tool with a focus on robust error handling and a minimalist user interface.
 
